@@ -25,7 +25,7 @@ env.read_env(BASE_DIR / ".env")
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env(
+SECRET_KEY = env.str(
     "SECRET_KEY",
     default="django-insecure-(eq=zae7!jxh2nbe*-&p+!-ol=f477r5&@)1tv1ow=d)ry+pga",
 )
@@ -33,7 +33,7 @@ SECRET_KEY = env(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = env("ALLOWED_HOSTS", default=["*"])
+ALLOWED_HOSTS = env.str("ALLOWED_HOSTS", default=["*"])
 
 
 # Application definition
@@ -84,11 +84,11 @@ WSGI_APPLICATION = "amocrm.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": env("DB_NAME", default="amocrm"),
-        "USER": env("DB_USER", default="amocrm"),
-        "PASSWORD": env("DB_PASSWORD", default="amocrm"),
-        "HOST": env("DB_HOST", default="localhost"),
-        "PORT": env("DB_PORT", default="3306"),
+        "NAME": env.str("DB_NAME", default="amocrm"),
+        "USER": env.str("DB_USER", default="amocrm"),
+        "PASSWORD": env.str("DB_PASSWORD", default="amocrm"),
+        "HOST": env.str("DB_HOST", default="localhost"),
+        "PORT": env.str("DB_PORT", default="3306"),
     }
 }
 
@@ -117,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Moscow"
 
 USE_I18N = True
 
@@ -149,11 +149,9 @@ LOGGING = {
     },
 }
 
-CELERY_BROKER_URL = env("CELERY_BROKER_URL", default="redis://redis:6379/0")
-CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND", default="redis://redis:6379/0")
+CELERY_BROKER_URL = env.str("CELERY_BROKER_URL", default="redis://redis:6379/0")
+CELERY_RESULT_BACKEND = env.str("CELERY_RESULT_BACKEND", default="redis://redis:6379/0")
+CELERY_TIMEZONE = TIME_ZONE
 
-import sys
-
-if any("pytest" in arg for arg in sys.argv):
-    CELERY_TASK_ALWAYS_EAGER = True
-    CELERY_TASK_EAGER_PROPAGATES = True
+CELERY_TASK_ALWAYS_EAGER = True
+CELERY_TASK_EAGER_PROPAGATES = True

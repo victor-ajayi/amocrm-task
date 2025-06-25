@@ -11,8 +11,8 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
-    "poll-machines-every-2-minutes": {
+    "poll-machines-every-15-minutes": {
         "task": "monitor.tasks.poll_machines_task",
-        "schedule": crontab(minute="*/2"),
+        "schedule": crontab(minute="*/15"),
     },
 }

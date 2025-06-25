@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 
 
 def check_cpu(metric: Metric) -> Incident | None:
-    logger.info(f"Checking CPU for machine {metric.machine.name}: {metric.cpu}%")
     active_incident = Incident.objects.filter(
         machine=metric.machine, type="CPU", end_time__isnull=True
     ).first()
@@ -29,7 +28,6 @@ def check_cpu(metric: Metric) -> Incident | None:
 
 
 def check_mem(metric: Metric) -> Incident | None:
-    logger.info(f"Checking MEM for machine {metric.machine.name}: {metric.mem}%")
     since = timezone.now() - timedelta(minutes=THRESHOLDS["MEM"]["duration"])
 
     if float(metric.mem) > THRESHOLDS["MEM"]["value"]:
@@ -53,7 +51,6 @@ def check_mem(metric: Metric) -> Incident | None:
 
 
 def check_disk(metric: Metric) -> Incident | None:
-    logger.info(f"Checking DISK for machine {metric.machine.name}: {metric.disk}%")
     since = timezone.now() - timedelta(minutes=THRESHOLDS["DISK"]["duration"])
 
     if float(metric.disk) > THRESHOLDS["DISK"]["value"]:
@@ -77,7 +74,6 @@ def check_disk(metric: Metric) -> Incident | None:
 
 
 def create_incident(machine, type_, value):
-    logger.info(f"Creating incident: {type_} for {machine.name} at value {value}")
     if not Incident.objects.filter(
         machine=machine, type=type_, end_time__isnull=True
     ).exists():
