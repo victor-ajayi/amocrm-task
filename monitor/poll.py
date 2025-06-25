@@ -35,6 +35,9 @@ async def fetch_metrics(machine: Machine) -> Metric | None:
                 disk=disk,
                 uptime=uptime,
             )
+            from monitor.tasks import run_checks_task
+
+            run_checks_task.delay(metric.id)
 
             logger.info(
                 f"Saved metrics for {machine.name}: CPU={cpu}%, MEM={mem}%, DISK={disk}%, UPTIME={uptime}"
