@@ -1,0 +1,63 @@
+services:
+  server:
+    build:
+      context: .
+    ports:
+      - 8000:8000
+    depends_on:
+      db:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: sync
+          path: ./amocrm
+          target: /app
+          ignore:
+            - .git
+
+  db:
+    image: mysql
+    restart: always
+    user: mysql
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./mysql:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    expose:
+      - 3306
+    ports:
+      - 3306:3306
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  celery:
+    build:
+      context: .
+    depends_on:
+      - db
+      - redis
+    command: celery -A amocrm.celery worker --loglevel=info
+
+  celery-beat:
+    build:
+      context: .
+    depends_on:
+      - db
+      - redis
+    command: celery -A amocrm.celery beat --loglevel=info
+
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - 6379:6379
+      
+volumes:
+  db-data:
