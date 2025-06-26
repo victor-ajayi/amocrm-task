@@ -80,7 +80,9 @@ def api_incidents(request):
     """API endpoint to get all incidents."""
     try:
         # Simplified query to debug
-        incidents = Incident.objects.all().order_by("-start_time")
+        incidents = (
+            Incident.objects.all().order_by("-start_time").select_related("machine")
+        )
         incidents_data = []
 
         for incident in incidents:
