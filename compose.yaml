@@ -15,6 +15,18 @@ services:
           ignore:
             - .git
 
+  web:
+    image: nginx:alpine
+    ports:
+      - 8080:80
+    volumes:
+      - ./web:/usr/share/nginx/html
+    depends_on:
+      - server
+    environment:
+      - NGINX_HOST=localhost
+      - NGINX_PORT=80
+
   db:
     image: mysql
     restart: always

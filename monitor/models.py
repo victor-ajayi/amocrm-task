@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 THRESHOLDS = {
     "CPU": {"value": 85, "duration": 0},
@@ -45,7 +46,7 @@ class Incident(models.Model):
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
     type = models.CharField(max_length=10, choices=INCIDENT_TYPES)
     value = models.FloatField()
-    start_time = models.DateTimeField(auto_now_add=True)
+    start_time = models.DateTimeField(default=timezone.now)
     end_time = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):

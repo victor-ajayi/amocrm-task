@@ -8,6 +8,7 @@ dependencies = [
     "asyncio>=3.4.3",
     "celery>=5.5.3",
     "django>=5.2.3",
+    "django-cors-headers>=4.7.0",
     "django-environ>=0.12.0",
     "faker>=37.4.0",
     "gunicorn>=23.0.0",
