@@ -38,13 +38,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function fetchIncidents() {
     try {
+      console.log("Fetching incidents...");
       incidentsTableBody.innerHTML =
         '<tr><td colspan="7" class="loading">Loading incidents...</td></tr>';
       const response = await fetch(`${API_BASE}/api/incidents/`);
+      console.log("Incidents response status:", response.status);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const incidents = await response.json();
+      console.log("Incidents fetched:", incidents.length);
       renderIncidents(incidents);
     } catch (err) {
       console.error("Failed to fetch incidents:", err);
@@ -105,12 +108,16 @@ document.addEventListener("DOMContentLoaded", function () {
         loginForm.style.display = "flex";
         registerForm.style.display = "none";
         loginError.textContent = "";
+        loginError.style.display = "none";
         registerError.textContent = "";
+        registerError.style.display = "none";
       } else {
         loginForm.style.display = "none";
         registerForm.style.display = "flex";
         loginError.textContent = "";
+        loginError.style.display = "none";
         registerError.textContent = "";
+        registerError.style.display = "none";
       }
     });
   });
@@ -131,14 +138,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (response.ok) {
         loginError.textContent = "";
+        loginError.style.display = "none";
         showDashboard();
       } else {
         const data = await response.json();
         loginError.textContent = data.error || "Login failed";
+        loginError.style.display = "block";
       }
     } catch (err) {
       console.error("Login error:", err);
-      loginError.textContent = "Network error. Please try again.";
+      loginError.textContent = `Error: ${err.message}`;
+      loginError.style.display = "block";
     }
   });
 
@@ -154,11 +164,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // Client-side validation
     if (password !== confirmPassword) {
       registerError.textContent = "Passwords do not match";
+      registerError.style.display = "block";
       return;
     }
 
     if (password.length < 6) {
       registerError.textContent = "Password must be at least 6 characters";
+      registerError.style.display = "block";
       return;
     }
 
@@ -172,14 +184,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (response.ok) {
         registerError.textContent = "";
+        registerError.style.display = "none";
         showDashboard();
       } else {
         const data = await response.json();
         registerError.textContent = data.error || "Registration failed";
+        registerError.style.display = "block";
       }
     } catch (err) {
       console.error("Registration error:", err);
-      registerError.textContent = "Network error. Please try again.";
+      registerError.textContent = `Error: ${err.message}`;
+      registerError.style.display = "block";
     }
   });
 
