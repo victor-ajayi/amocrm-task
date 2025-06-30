@@ -1,4 +1,4 @@
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 from asgiref.sync import sync_to_async
@@ -33,7 +33,7 @@ async def test_fetch_metrics_success(mock_client):
             "uptime": "5 days, 3 hours",
         }
     )
-    mock_response.raise_for_status = AsyncMock(return_value=None)
+    mock_response.raise_for_status = Mock(return_value=None)
     mock_client_instance = AsyncMock()
     mock_client_instance.__aenter__.return_value = mock_client_instance
     mock_client_instance.__aexit__.return_value = None
@@ -89,7 +89,7 @@ async def test_incident_created_on_high_cpu(mock_run_checks_task, mock_client):
             "uptime": "1d",
         }
     )
-    mock_response.raise_for_status = AsyncMock(return_value=None)
+    mock_response.raise_for_status = Mock(return_value=None)
     mock_client_instance = AsyncMock()
     mock_client_instance.__aenter__.return_value = mock_client_instance
     mock_client_instance.__aexit__.return_value = mock_client_instance

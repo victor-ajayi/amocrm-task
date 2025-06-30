@@ -17,7 +17,7 @@ async def fetch_metrics(machine: Machine) -> Metric | None:
             logger.debug(f"Making HTTP request to {machine.url}")
 
             response = await client.get(machine.url)
-            await response.raise_for_status()
+            response.raise_for_status()
             data = await response.json()
 
             cpu = float(data["cpu"])
